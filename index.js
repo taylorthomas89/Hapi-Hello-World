@@ -1,25 +1,15 @@
 'use strict';
 
 const Hapi = require('hapi');
+const routes = [
+  require('./routes/greeting'),
+  require('./routes/helloword'),
+  require('./routes/profile')
+];
 
 const server = Hapi.server({
   port: 3000,
   host: 'localhost'
-});
-
-server.route({
-  method: 'GET',
-  path: '/',
-  handler: (req, res) => 'Hello World!'
-});
-
-server.route({
-  method: 'GET',
-  path: '/{name}',
-  handler: (req, res) => {
-    req.logger.info('In handler %s', req.path);
-    return 'Hello, ' + encodeURIComponent(req.params.name) + '!'
-  }
 });
 
 const init = async () => {
@@ -34,6 +24,8 @@ const init = async () => {
   await server.start();
   console.log(`Server is running at: ${server.info.uri}`);
 };
+
+server.route(routes);
 
 process.on('unhandledRejection', (err) => {
   console.log(err);
